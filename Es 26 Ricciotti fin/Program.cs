@@ -33,6 +33,7 @@ namespace Es_26_Ricciotti_fin
 
 
 
+
             Console.WriteLine(list.Stampa());
             Console.WriteLine("\n--------------------------------------------------------------------\n");
             list.Sort();
@@ -54,8 +55,22 @@ namespace Es_26_Ricciotti_fin
 
             listaFigure areeMaggiori = new listaFigure(list.Aree_maggiori());
             Console.WriteLine(areeMaggiori.Stampa());
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            Console.WriteLine("Prove Equals");
 
+            FiguraGeometrica ret = new Rettangolo(4, 7);
 
+            FiguraGeometrica tri = new Triangolo(2, 3, 2, 3);
+
+            FiguraGeometrica cer = new Circonferenza(3);
+
+            FiguraGeometrica qua = new Quadrato(5, 5);
+
+          //  tri.Equals(ret);
+
+            qua.Equals(cer);
+
+            cer.Equals(tri);
 
             Console.ReadKey();
 
@@ -136,13 +151,18 @@ namespace Es_26_Ricciotti_fin
             public override bool Equals(object other)
             {
                 FiguraGeometrica n = (FiguraGeometrica)other;
-                if (this.nome == n.Nome())
+
+                if(!(n is Triangolo))
                 {
-                    if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
-                    {
-                        return true;
-                    }
+                    throw new FiguraErrata("Il parametro inserito è una figura diversa dal " + nome, n);
                 }
+
+
+                if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
+                {
+                    return true;
+                }
+                
 
                 return false;
             }
@@ -182,13 +202,18 @@ namespace Es_26_Ricciotti_fin
             public override bool Equals(object other)
             {
                 FiguraGeometrica n = (FiguraGeometrica)other;
-                if (this.nome == n.Nome())
+
+                if(!(n is Rettangolo))
                 {
-                    if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
-                    {
-                        return true;
-                    }
+                    throw new FiguraErrata("Il parametro inserito è una figura diversa dal " + nome, n);
                 }
+
+
+                if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
+                {
+                    return true;
+                }
+                
 
                 return false;
             }
@@ -225,14 +250,26 @@ namespace Es_26_Ricciotti_fin
 
             public override bool Equals(object other)
             {
-                FiguraGeometrica n = (FiguraGeometrica)other;
-                if (this.nome == n.Nome())
+
+                Quadrato n;
+                try
                 {
-                    if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
-                    {
-                        return true;
-                    }
+                     n = (Quadrato)other;
                 }
+                catch(InvalidCastException ex)
+                {
+                    Console.WriteLine("Casting non corretto!\n"+ex);
+                    return false;
+                }
+
+                 n = (Quadrato)other;
+
+
+                if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
+                {
+                    return true;
+                }
+                
 
                 return false;
             }
@@ -268,14 +305,26 @@ namespace Es_26_Ricciotti_fin
 
             public override bool Equals(object other)
             {
-                FiguraGeometrica n = (FiguraGeometrica)other;
-                if (this.nome == n.Nome())
+                Circonferenza n;
+
+                try
                 {
-                    if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
-                    {
-                        return true;
-                    }
+                    n = (Circonferenza)other;
                 }
+                catch(InvalidCastException ex)
+                {
+                    Console.WriteLine("Casting non corretto!\n" + ex);
+                    return false;
+                }
+
+                n = (Circonferenza)other;
+
+
+                if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
+                {
+                    return true;
+                }
+              
 
                 return false;
             }
@@ -317,13 +366,16 @@ namespace Es_26_Ricciotti_fin
             public override bool Equals(object other)
             {
                 FiguraGeometrica n = (FiguraGeometrica)other;
-                if (this.nome == n.Nome())
+                if(!(n is Rombo))
                 {
-                    if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
-                    {
-                        return true;
-                    }
+                    throw new FiguraErrata("Il parametro inserito è una figura diversa dal " + nome, n);
                 }
+
+                if (this.Area() == n.Area() && this.Perimetro() == n.Perimetro())
+                {
+                    return true;
+                }
+                
 
                 return false;
             }
@@ -477,6 +529,26 @@ namespace Es_26_Ricciotti_fin
 
             }
 
+        }
+
+        [Serializable]
+        public class FiguraErrata : Exception
+        {
+
+            object param;
+
+            public FiguraErrata(string message,object param): base(message)
+            {
+                this.param = param;
+            }
+
+            public override string ToString()
+            {
+                string ris= base.ToString();
+                ris += "Valore parametro: " + this.param;
+
+                return ris;
+            }
         }
     }
 }
